@@ -1,0 +1,8 @@
+# Generated images
+*.png
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd

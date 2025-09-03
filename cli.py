@@ -35,6 +35,21 @@ def main(argv: Optional[List[str]] = None) -> None:
         print(f"Error: {str(e)}", file=sys.stderr)
         sys.exit(1)
 
+def normalize_output_path(path: str) -> str:
+    """Normalize output path to ensure .png extension.
+    
+    - If path has no extension, adds .png
+    - If path has non-PNG extension, changes to .png and warns
+    - Returns normalized path
+    """
+    base, ext = os.path.splitext(path)
+    if not ext:
+        return f"{base}.png"
+    if ext.lower() != ".png":
+        print(f"Warning: Output format changed to PNG (was {ext})")
+        return f"{base}.png"
+    return path
+
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     """Construct and parse the argument parser for the CLI."""
     parser = argparse.ArgumentParser(
@@ -97,11 +112,14 @@ def encode_command(image_path: str, message: str, password: str, output_path: Op
     # Embed payload
     stego_image = steganography.embed_payload_into_image(image, payload)
     
-    # Save output
-    if not output_path:
-        base, ext = os.path.splitext(image_path)
-        output_path = f"{base}_stego{ext}"
+    # Normalize output path to PNG
+    if output_path:
+        output_path = normalize_output_path(output_path)
+    else:
+        base, _ = os.path.splitext(image_path)
+        output_path = f"{base}_steganography.png"
     
+    # Save output
     image_io.save_image(stego_image, output_path)
     print(f"Message embedded successfully in {output_path}")
 

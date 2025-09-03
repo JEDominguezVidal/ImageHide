@@ -19,9 +19,6 @@ The application supports:
 ├── cli.py                     # Command-line interface
 ├── README.md                  # This documentation file
 ├── requirements.txt           # Python dependencies
-├── test_crypto.py             # Cryptography unit tests
-├── test_integration.py        # End-to-end workflow test
-├── test_steganography.py      # Steganography unit tests
 └── core/                      # Main implementation modules
     ├── steganography.py       # LSB embedding/extraction logic
     ├── crypto.py              # AES encryption and key derivation

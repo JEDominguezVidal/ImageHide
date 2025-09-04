@@ -16,48 +16,69 @@ The application supports:
 ### File Structure
 ```
 .
-├── cli.py                     # Command-line interface
-├── README.md                  # This documentation file
-├── requirements.txt           # Python dependencies
-└── core/                      # Main implementation modules
-    ├── steganography.py       # LSB embedding/extraction logic
-    ├── crypto.py              # AES encryption and key derivation
-    ├── encoding.py            # Text processing and rotation cipher
-    ├── image_io.py            # Image loading/saving and analysis
-    └── errors.py              # Custom exception classes
-└── tests/                     # Test files to check funtionalities
-    ├── test_crypto.py         # Cryptography unit tests
-    ├── test_steganography.py  # Steganography unit tests
-    ├── test_integration.py    # End-to-end workflow test
-    └── test_all.py            # All tests executed in sequence
+├── pyproject.toml            # Project configuration and dependencies
+├── README.md                 # This documentation file
+└── imagehide/                # Main package directory
+    ├── __init__.py           # Package initialization
+    ├── cli.py                # Command-line interface entry point
+    ├── config.py             # Configuration settings
+    ├── core/                 # Core implementation modules
+    │   ├── __init__.py       # Core package initialization
+    │   ├── crypto.py         # AES encryption and key derivation
+    │   ├── encoding.py       # Text processing and rotation cipher
+    │   ├── errors.py         # Custom exception classes
+    │   ├── image_io.py       # Image loading/saving and analysis
+    │   ├── steganography.py  # LSB embedding/extraction logic
+    └── tests/                    # Test files
+        ├── __init__.py           # Tests package initialization
+        ├── test_all.py           # All tests executed in sequence
+        ├── test_crypto.py        # Cryptography unit tests
+        ├── test_integration.py   # End-to-end workflow test
+        └── test_steganography.py # Steganography unit tests
 ```
 
 ### Folder Structure
-- `core/`: Contains all core application logic
-- `scripts/`: Contains executable scripts (currently empty)
-- `tests/`: Unit and integration tests
+- `imagehide/`: Main package containing the CLI and core modules
+- `imagehide/core/`: Contains all core application logic
+- `imagehide/tests/`: Unit and integration tests
 
 ## Usage
 
+### Dependencies
+ImageHide has the following dependencies:
+- Pillow>=9.0.0
+- cryptography>=40.0
+- numpy>=1.24
+- pytest>=7.0
+
 ### Installation
+ImageHide can be installed as a standard Linux application using pip:
+
 ```bash
-# Install dependencies
-pip install -r requirements.txt
+# Download this repository
+git clone https://github.com/JEDominguezVidal/ImageHide.git
+
+# Install the package and dependencies
+cd ImageHide
+pip install .
+
+# Verify installation
+imagehide --help
 ```
 
 ### Command Examples
 ```bash
 # Encode message into image (with password)
-python cli.py encode -i input.png -m "Secret Message" -p password -o output.png
+imagehide encode input.png -m "Secret Message" -p password -o output.png
 
 # Decode message from image
-python cli.py decode -i output.png -p password
+imagehide decode output.png -p password
 ```
 
 ### Arguments
 | Argument | Description | Example |
 |----------|-------------|---------|
-| `-i`, `--input` | Input image path | `-i photo.png` |
+| `image` | Input image path (positional) | `input.png` |
 | `-o`, `--output` | Output image path | `-o secret.png` |
 | `-m`, `--message` | Message to hide | `-m "Top Secret"` |
 | `-p`, `--password` | Password for encryption | `-p mypassword` |

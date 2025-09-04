@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "imagehide"
+version = "0.1.0"
+description = "ImageHide — simple LSB image steganography with password-protected encryption"
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["steganography", "stego", "image", "encryption"]
+dependencies = [
+    "Pillow>=9.0.0",
+    "cryptography>=40.0",
+    "numpy>=1.24",
+    "pytest>=7.0"
+]
+
+[project.scripts]
+imagehide = "imagehide.cli:main"

@@ -12,7 +12,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 from cryptography.exceptions import InvalidTag
-from .errors import DecryptionError
+from imagehide.core.errors import DecryptionError
 
 # Constants
 SALT_LENGTH = 16  # 128-bit salt

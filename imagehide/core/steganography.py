@@ -13,8 +13,8 @@
 import struct
 from typing import Optional, Tuple, Iterable, Iterator, List
 from PIL import Image
-from . import crypto, encoding
-from .errors import CapacityError, FormatError, DecryptionError
+from imagehide.core import crypto, encoding
+from imagehide.core.errors import CapacityError, FormatError, DecryptionError
 
 # Constants for message tags
 START_TAG = "<start_msg>"

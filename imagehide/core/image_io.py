@@ -8,7 +8,7 @@
 import os
 from typing import Tuple, Optional
 from PIL import Image
-from .errors import FormatError
+from imagehide.core.errors import FormatError
 
 def load_image(path: str) -> Image.Image:
     """Load an image from the filesystem and return a PIL Image object.

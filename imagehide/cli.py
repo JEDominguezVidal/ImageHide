@@ -9,8 +9,8 @@ import os
 import sys
 import getpass
 from typing import Optional, List
-from core import image_io, steganography, errors
-from core.errors import CapacityError, FormatError, DecryptionError
+from imagehide.core import image_io, steganography, errors
+from imagehide.core.errors import CapacityError, FormatError, DecryptionError
 
 def main(argv: Optional[List[str]] = None) -> None:
     """Primary CLI entry point."""
@@ -36,11 +36,11 @@ def main(argv: Optional[List[str]] = None) -> None:
         sys.exit(1)
 
 def normalize_output_path(path: str) -> str:
-    """Normalize output path to ensure .png extension.
+    """Normalise output path to ensure .png extension.
     
     - If path has no extension, adds .png
     - If path has non-PNG extension, changes to .png and warns
-    - Returns normalized path
+    - Returns normalised path
     """
     base, ext = os.path.splitext(path)
     if not ext:
@@ -51,25 +51,28 @@ def normalize_output_path(path: str) -> str:
     return path
 
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
-    """Construct and parse the argument parser for the CLI."""
+    """Construct and parse the argument parser for the command-line interface."""
     parser = argparse.ArgumentParser(
         prog="imagehide",
         description="ImageHide: Hide messages in images using steganography"
     )
-    subparsers = parser.add_subparsers(dest='command', required=True)
+    subparsers = parser.add_subparsers(dest='command')
+    
+    # Show help if no arguments provided
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(0)
 
     # Encode command
     encode_parser = subparsers.add_parser('encode', help='Encode a message into an image')
-    # encode_parser.add_argument('image', help='Path to input image')
-    encode_parser.add_argument('-i', '--image', help='Path to input image')
+    encode_parser.add_argument('image', help='Path to input image')
     encode_parser.add_argument('-m', '--message', help='Message to hide (use - for stdin)', default='')
     encode_parser.add_argument('-p', '--password', help='Password to protect the message', required=True)
     encode_parser.add_argument('-o', '--output', help='Output image path', default=None)
     
     # Decode command
     decode_parser = subparsers.add_parser('decode', help='Decode a message from an image')
-    # decode_parser.add_argument('image', help='Path to image containing hidden message')
-    decode_parser.add_argument('-i', '--image', help='Path to image containing hidden message')
+    decode_parser.add_argument('image', help='Path to image containing hidden message')
     decode_parser.add_argument('-p', '--password', help='Password to decrypt the message', required=True)
 
     return parser.parse_args(argv)
@@ -93,7 +96,7 @@ def validate_args_for_decode(args: argparse.Namespace) -> None:
         raise FileNotFoundError(f"Input image not found: {args.image}")
 
 def encode_command(image_path: str, message: str, password: str, output_path: Optional[str] = None) -> None:
-    """High-level encode operation."""
+    """High-level encoding operation."""
     # Load image
     image = image_io.load_image(image_path)
     
@@ -124,7 +127,7 @@ def encode_command(image_path: str, message: str, password: str, output_path: Op
     print(f"Message embedded successfully in {output_path}")
 
 def decode_command(image_path: str, password: str) -> str:
-    """High-level decode operation which extracts and returns the message."""
+    """High-level decoding operation which extracts and returns the message."""
     # Load image
     image = image_io.load_image(image_path)
     

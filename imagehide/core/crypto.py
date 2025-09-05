@@ -12,12 +12,8 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 from cryptography.exceptions import InvalidTag
+from imagehide.core.config import CRYPTO_SALT_LENGTH, CRYPTO_NONCE_LENGTH, CRYPTO_AUTH_TAG_LENGTH
 from imagehide.core.errors import DecryptionError
-
-# Constants
-SALT_LENGTH = 16  # 128-bit salt
-NONCE_LENGTH = 12  # 96-bit nonce for AES-GCM
-TAG_LENGTH = 16    # 128-bit authentication tag
 
 def derive_key_from_password(password: str, salt: Optional[bytes] = None, kdf_params: Optional[dict] = None) -> Tuple[bytes, bytes]:
     """Derive a symmetric key from a textual password using PBKDF2.
@@ -33,7 +29,7 @@ def derive_key_from_password(password: str, salt: Optional[bytes] = None, kdf_pa
     
     # Generate new salt if not provided
     if salt is None:
-        salt = os.urandom(SALT_LENGTH)
+        salt = os.urandom(CRYPTO_SALT_LENGTH)
     
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
@@ -54,7 +50,7 @@ def encrypt_with_aes_gcm(plaintext: bytes, key: bytes) -> Tuple[bytes, bytes, by
     :returns: Tuple (ciphertext, nonce, tag).
     """
     # Generate random nonce
-    nonce = os.urandom(NONCE_LENGTH)
+    nonce = os.urandom(CRYPTO_NONCE_LENGTH)
     
     # Create cipher and encrypt
     cipher = Cipher(algorithms.AES(key), modes.GCM(nonce), backend=default_backend())
@@ -92,12 +88,12 @@ def pack_encrypted_payload(salt: bytes, nonce: bytes, tag: bytes, ciphertext: by
     :param ciphertext: Ciphertext bytes.
     :returns: Packed payload bytes.
     """
-    if len(salt) != SALT_LENGTH:
-        raise ValueError(f"Salt must be {SALT_LENGTH} bytes")
-    if len(nonce) != NONCE_LENGTH:
-        raise ValueError(f"Nonce must be {NONCE_LENGTH} bytes")
-    if len(tag) != TAG_LENGTH:
-        raise ValueError(f"Tag must be {TAG_LENGTH} bytes")
+    if len(salt) != CRYPTO_SALT_LENGTH:
+        raise ValueError(f"Salt must be {CRYPTO_SALT_LENGTH} bytes")
+    if len(nonce) != CRYPTO_NONCE_LENGTH:
+        raise ValueError(f"Nonce must be {CRYPTO_NONCE_LENGTH} bytes")
+    if len(tag) != CRYPTO_AUTH_TAG_LENGTH:
+        raise ValueError(f"Tag must be {CRYPTO_AUTH_TAG_LENGTH} bytes")
     
     return salt + nonce + tag + ciphertext
 
@@ -108,12 +104,13 @@ def unpack_encrypted_payload(payload: bytes) -> Tuple[bytes, bytes, bytes, bytes
     :returns: (salt, nonce, tag, ciphertext)
     :raises: ValueError if payload is malformed.
     """
-    if len(payload) < SALT_LENGTH + NONCE_LENGTH + TAG_LENGTH:
-        raise ValueError("Payload too short to contain required components")
+    required_length = CRYPTO_SALT_LENGTH + CRYPTO_NONCE_LENGTH + CRYPTO_AUTH_TAG_LENGTH
+    if len(payload) < required_length:
+        raise ValueError(f"Payload too short to contain required components (needs at least {required_length} bytes)")
     
-    salt = payload[:SALT_LENGTH]
-    nonce = payload[SALT_LENGTH:SALT_LENGTH+NONCE_LENGTH]
-    tag = payload[SALT_LENGTH+NONCE_LENGTH:SALT_LENGTH+NONCE_LENGTH+TAG_LENGTH]
-    ciphertext = payload[SALT_LENGTH+NONCE_LENGTH+TAG_LENGTH:]
+    salt = payload[:CRYPTO_SALT_LENGTH]
+    nonce = payload[CRYPTO_SALT_LENGTH:CRYPTO_SALT_LENGTH+CRYPTO_NONCE_LENGTH]
+    tag = payload[CRYPTO_SALT_LENGTH+CRYPTO_NONCE_LENGTH:CRYPTO_SALT_LENGTH+CRYPTO_NONCE_LENGTH+CRYPTO_AUTH_TAG_LENGTH]
+    ciphertext = payload[CRYPTO_SALT_LENGTH+CRYPTO_NONCE_LENGTH+CRYPTO_AUTH_TAG_LENGTH:]
     
     return salt, nonce, tag, ciphertext

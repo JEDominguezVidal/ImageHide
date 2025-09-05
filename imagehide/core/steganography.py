@@ -14,12 +14,8 @@ import struct
 from typing import Optional, Tuple, Iterable, Iterator, List
 from PIL import Image
 from imagehide.core import crypto, encoding
+from imagehide.core.config import STEGANOGRAPHY_START_TAG, STEGANOGRAPHY_END_TAG
 from imagehide.core.errors import CapacityError, FormatError, DecryptionError
-
-# Constants for message tags
-START_TAG = "<start_msg>"
-END_TAG = "<end_msg>"
-TAG_LENGTH = len(START_TAG) + len(END_TAG)
 
 def embed_payload_into_image(image: Image.Image, payload: bytes, include_alpha: bool = False, lsb_count: int = 1) -> Image.Image:
     """Embed the given payload bytes into the image's least-significant bits.
@@ -129,7 +125,7 @@ def build_payload_from_text(text: str, password: str, kdf_params: Optional[dict]
     :returns: Packed payload bytes ready for embedding.
     """
     # Add tags to message
-    tagged_text = f"{START_TAG}{text}{END_TAG}"
+    tagged_text = f"{STEGANOGRAPHY_START_TAG}{text}{STEGANOGRAPHY_END_TAG}"
     
     # Apply rotation cipher
     shift = len(password)
@@ -180,8 +176,8 @@ def extract_text_from_payload(payload: bytes, password: str) -> str:
     derotated_text = encoding.rotate_letters(decoded_text, shift)
     
     # Remove tags
-    if derotated_text.startswith(START_TAG) and derotated_text.endswith(END_TAG):
-        return derotated_text[len(START_TAG):-len(END_TAG)]
+    if derotated_text.startswith(STEGANOGRAPHY_START_TAG) and derotated_text.endswith(STEGANOGRAPHY_END_TAG):
+        return derotated_text[len(STEGANOGRAPHY_START_TAG):-len(STEGANOGRAPHY_END_TAG)]
     raise FormatError("Payload tags are missing or corrupted")
 
 def calculate_required_bits_for_payload(payload_length_bytes: int, lsb_count: int = 1) -> int:

@@ -24,6 +24,7 @@ The application supports:
     ├── config.py             # Configuration settings
     ├── core/                 # Core implementation modules
     │   ├── __init__.py       # Core package initialization
+    │   ├── config.py         # Constants for core functionality
     │   ├── crypto.py         # AES encryption and key derivation
     │   ├── encoding.py       # Text processing and rotation cipher
     │   ├── errors.py         # Custom exception classes

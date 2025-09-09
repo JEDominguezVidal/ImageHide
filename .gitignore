@@ -7,3 +7,7 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+
+# Build folder
+build/
+imagehide.egg-info/

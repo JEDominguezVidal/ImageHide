@@ -109,11 +109,11 @@ class ImageHideGUI(QMainWindow):
         password = self.password_input.text()
         message = self.message_input.toPlainText()
         
-        if not all([image_path, password, message]):
-            self.show_error("All fields are required for encoding")
-            return
-        
         try:
+            # Check required fields
+            if not all([image_path, password, message]):
+                raise errors.GeneralError("All fields are required for encoding")
+            
             # Load image
             image = image_io.load_image(image_path)
             
@@ -143,11 +143,11 @@ class ImageHideGUI(QMainWindow):
         image_path = self.image_path.text()
         password = self.password_input.text()
         
-        if not all([image_path, password]):
-            self.show_error("Image path and password are required for decoding")
-            return
-        
         try:
+            # Check required fields
+            if not all([image_path, password]):
+                raise errors.GeneralError("Image path and password are required for decoding")
+            
             # Load image
             image = image_io.load_image(image_path)
             

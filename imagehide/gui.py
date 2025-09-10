@@ -8,6 +8,7 @@ protection, and message handling components.
 
 import sys
 import os
+from datetime import datetime
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QLabel, QLineEdit, QTextEdit, QPushButton, QFileDialog, QMessageBox
@@ -126,7 +127,8 @@ class ImageHideGUI(QMainWindow):
             
             # Save output
             image_io.save_image(stego_image, output_path)
-            self.status_display.append(f"Message embedded successfully in {output_path}")
+            timestamp = self._format_timestamp()
+            self.status_display.append(f"[{timestamp}] Message embedded successfully in {output_path}")
         except Exception as e:
             self.show_error(str(e))
     
@@ -155,9 +157,14 @@ class ImageHideGUI(QMainWindow):
             
             # Update message field
             self.message_input.setPlainText(message)
-            self.status_display.append("Message decoded successfully")
+            timestamp = self._format_timestamp()
+            self.status_display.append(f"[{timestamp}] Message decoded successfully")
         except Exception as e:
             self.show_error(str(e))
+    
+    def _format_timestamp(self) -> str:
+        """Return current timestamp in 'YYYY-MM-DD HH:MM:SS' format."""
+        return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     def show_error(self, message) -> None:
         """Display an error message in a dialog and the status display.
@@ -166,7 +173,8 @@ class ImageHideGUI(QMainWindow):
             message: The error message to display
         """
         QMessageBox.critical(self, "Error", message)
-        self.status_display.append(f"Error: {message}")
+        timestamp = self._format_timestamp()
+        self.status_display.append(f"[{timestamp}] Error: {message}")
 
 
 def main() -> None:

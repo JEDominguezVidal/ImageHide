@@ -4,6 +4,11 @@ class ImageHideError(Exception):
     """Base class for all ImageHide-specific errors."""
     pass
 
+class GeneralError(ImageHideError):
+    """Raised for general application errors."""
+    def __init__(self, message):
+        super().__init__(message)
+
 class CapacityError(ImageHideError):
     """Raised when an image lacks sufficient capacity for a payload."""
     def __init__(self, required_bits, available_bits):

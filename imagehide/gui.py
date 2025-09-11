@@ -98,7 +98,6 @@ class ImageHideGUI(QMainWindow):
             
             # Try .ico first, then .png
             icon_path = os.path.join(assets_dir, 'ImageHide_logo.ico')
-            print(icon_path)
             if not os.path.exists(icon_path):
                 icon_path = os.path.join(assets_dir, 'ImageHide_logo.png')
             

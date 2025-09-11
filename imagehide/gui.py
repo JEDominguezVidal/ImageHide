@@ -105,9 +105,9 @@ class ImageHideGUI(QMainWindow):
                 QApplication.setWindowIcon(QIcon(icon_path))
                 self.setWindowIcon(QIcon(icon_path))
             else:
-                self.status_display.append("Warning: Icon files not found")
+                self.status_display.append("Warning: Icon files not found in assets directory.")
         except Exception as e:
-            self.status_display.append(f"Error loading icons: {str(e)}")
+            self.show_error(str(e))
     
     def browse_image(self):
         """Open a file dialog to select an image file.

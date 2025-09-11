@@ -14,6 +14,7 @@ from PyQt5.QtWidgets import (
     QLabel, QLineEdit, QTextEdit, QPushButton, QFileDialog, QMessageBox
 )
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
 from imagehide.core import image_io, steganography, errors
 
 
@@ -85,8 +86,31 @@ class ImageHideGUI(QMainWindow):
         self.status_display = QTextEdit()
         self.status_display.setReadOnly(True)
         status_layout.addWidget(self.status_display)
+        
+        # Set icons after UI is initialized
+        self.set_icons()
     
-    def browse_image(self) -> None:
+    def set_icons(self) -> None:
+        """Set application and window icons from assets directory."""
+        try:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            assets_dir = os.path.join(base_dir, 'assets')
+            
+            # Try .ico first, then .png
+            icon_path = os.path.join(assets_dir, 'ImageHide_logo.ico')
+            print(icon_path)
+            if not os.path.exists(icon_path):
+                icon_path = os.path.join(assets_dir, 'ImageHide_logo.png')
+            
+            if os.path.exists(icon_path):
+                QApplication.setWindowIcon(QIcon(icon_path))
+                self.setWindowIcon(QIcon(icon_path))
+            else:
+                self.status_display.append("Warning: Icon files not found")
+        except Exception as e:
+            self.status_display.append(f"Error loading icons: {str(e)}")
+    
+    def browse_image(self):
         """Open a file dialog to select an image file.
         
         Sets the selected file path to the image path field.

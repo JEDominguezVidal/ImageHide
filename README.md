@@ -14,39 +14,42 @@ The application supports:
 
 ## Project Structure
 
-### File Structure
+### File Structure:
 ```
 .
-├── pyproject.toml            # Project configuration and dependencies
-├── README.md                 # This documentation file
-└── imagehide/                # Main package directory
-    ├── __init__.py           # Package initialisation
-    ├── cli.py                # Command-line interface entry point
-    ├── gui.py                # Graphical user interface
-    ├── core/                 # Core implementation modules
-    │   ├── __init__.py       # Core package initialisation
-    │   ├── config.py         # Constants for core functionality
-    │   ├── crypto.py         # AES encryption and key derivation
-    │   ├── encoding.py       # Text processing and rotation cipher
-    │   ├── errors.py         # Custom exception classes
-    │   ├── image_io.py       # Image loading/saving and analysis
-    │   ├── steganography.py  # LSB embedding/extraction logic
-    └── tests/                # Test files
-        ├── __init__.py       # Tests package initialisation
-        ├── test_all.py       # All tests executed in sequence
-        ├── test_crypto.py    # Cryptography unit tests
-        ├── test_integration.py # End-to-end workflow test
-        └── test_steganography.py # Steganography unit tests
+├── pyproject.toml                 # Project configuration and dependencies
+├── README.md                      # This documentation file
+└── imagehide/                     # Main package directory
+    ├── __init__.py                # Package initialisation
+    ├── cli.py                     # Command-line interface entry point
+    ├── gui.py                     # Graphical user interface
+    ├── assets/                    # Project assests
+    │   └── ImageHide_logo.ico     # GUI logo
+    ├── core/                      # Core implementation modules
+    │   ├── __init__.py            # Core package initialisation
+    │   ├── config.py              # Constants for core functionality
+    │   ├── crypto.py              # AES encryption and key derivation
+    │   ├── encoding.py            # Text processing and rotation cipher
+    │   ├── errors.py              # Custom exception classes
+    │   ├── image_io.py            # Image loading/saving and analysis
+    │   └── steganography.py       # LSB embedding/extraction logic
+    └── tests/                     # Test files
+        ├── __init__.py            # Tests package initialisation
+        ├── test_all.py            # All tests executed in sequence
+        ├── test_crypto.py         # Cryptography unit tests
+        ├── test_integration.py    # End-to-end workflow test
+        └── test_steganography.py  # Steganography unit tests
 ```
 
-### Folder Structure
+### Folder Structure:
 - `imagehide/`: Main package containing the CLI, GUI, and core modules
+- `imagehide/assets/`: Contains all assets used in the project
 - `imagehide/core/`: Contains all core application logic
 - `imagehide/tests/`: Unit and integration tests
 
 ## Installation and Usage
 
-### Dependencies
+### Dependencies:
 ImageHide has the following dependencies:
 - Pillow>=9.0.0
 - cryptography>=40.0
@@ -54,7 +57,7 @@ ImageHide has the following dependencies:
 - pytest>=7.0
 - **PyQt5>=5.15** (for GUI functionality)
 
-### Installation
+### Installation:
 ImageHide can be installed as a standard Linux application using pip:
 
 ```bash
@@ -69,14 +72,14 @@ pip install .
 imagehide --help
 ```
 
-### Potential Installation Issues
+### Potential Installation Issues:
 One known issue has been detected when installing the PyQt5 library:
 1. Installation getting stuck on "Preparing Wheel metadata..." when trying to install PyQt5 can be fixed by updating pip to the latest version (25.0.1 at the time of writing this document):
 ```bash
 python -m pip install --upgrade pip
 ```
 
-### Command Examples
+### Command Examples:
 ```bash
 # Encode message into image (with password) using CLI
 imagehide encode input.png -m "Secret Message" -p password -o output.png
@@ -88,7 +91,7 @@ imagehide decode output.png -p password
 imagehide-gui
 ```
 
-### CLI Arguments
+### CLI Arguments:
 | Argument | Description | Example |
 |----------|-------------|---------|
 | `image` | Input image path (positional) | `input.png` |

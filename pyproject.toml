@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "imagehide"
-version = "0.2.0"
+version = "0.3.0"
 description = "ImageHide — simple LSB image steganography with password-protected encryption"
 readme = "README.md"
 requires-python = ">=3.8"

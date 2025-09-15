@@ -48,7 +48,7 @@ WORKDIR /app
 COPY . .
 
 # Make scripts executable
-RUN chmod +x run-gui.sh
+RUN chmod +x run-gui.sh entrypoint.sh
 
 # Install Python dependencies and the package
 RUN pip install --no-cache-dir .
@@ -60,8 +60,8 @@ USER appuser
 # Set environment variables
 ENV DISPLAY=:0
 
-# Entry point for CLI
-ENTRYPOINT ["imagehide"]
+# Custom entrypoint that handles both CLI and GUI
+ENTRYPOINT ["./entrypoint.sh"]
 
 # Default command (can be overridden)
 CMD ["--help"]

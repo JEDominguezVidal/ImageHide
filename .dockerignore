@@ -68,6 +68,10 @@ Dockerfile
 .dockerignore
 docker-compose.yml
 
+# Input/Output directories (created at runtime)
+input/
+output/
+
 # Other
 *.tmp
 *.bak

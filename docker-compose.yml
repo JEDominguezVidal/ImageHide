@@ -4,11 +4,12 @@ services:
   imagehide:
     build: .
     volumes:
-      - ./input:/app/input:ro
-      - ./output:/app/output
+      - ./input:/app/input:rw
+      - ./output:/app/output:rw
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
     environment:
       - DISPLAY=${DISPLAY}
     network_mode: host
     stdin_open: true
     tty: true
+    user: "${UID:-1000}:${GID:-1000}"

@@ -53,8 +53,13 @@ RUN chmod +x run-gui.sh entrypoint.sh
 # Install Python dependencies and the package
 RUN pip install --no-cache-dir .
 
+# Create directories with proper permissions before switching to non-root user
+RUN mkdir -p /app/input /app/output && \
+    chmod 755 /app/input /app/output
+
 # Create a non-root user
-RUN useradd --create-home --shell /bin/bash appuser
+RUN useradd --create-home --shell /bin/bash appuser && \
+    chown -R appuser:appuser /app/input /app/output
 USER appuser
 
 # Set environment variables

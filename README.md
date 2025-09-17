@@ -98,3 +98,82 @@ imagehide-gui
 | `-o`, `--output` | Output image path | `-o secret.png` |
 | `-m`, `--message` | Message to hide | `-m "Top Secret"` |
 | `-p`, `--password` | Password for encryption | `-p mypassword` |
+
+## Docker Usage
+
+ImageHide can be run in a Docker container without installing dependencies on the host system.
+
+### Quick Setup
+
+Before running ImageHide in Docker, run the setup script to prepare your environment:
+
+```bash
+# Run the setup script to prepare directories and permissions
+./setup.sh
+```
+
+This will:
+- Create `input/` and `output/` directories
+- Fix directory permissions
+- Copy a sample image for testing
+
+### Building the Docker Image
+
+```bash
+# Build the Docker image
+docker build -t imagehide .
+```
+
+### Running CLI Commands
+
+```bash
+# Encode message
+docker run --rm -v $(pwd)/input:/app/input -v $(pwd)/output:/app/output imagehide encode /app/input/sample.png -m "Secret Message" -p password -o /app/output/output.png
+
+# Decode message
+docker run --rm -v $(pwd)/input:/app/input -v $(pwd)/output:/app/output imagehide decode /app/output/output.png -p password
+```
+
+### Running GUI
+
+For GUI usage, you need to allow Docker to access your X server:
+
+```bash
+# Allow local connections to X server
+xhost +local:docker
+
+# Run GUI
+docker run --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $(pwd)/input:/app/input -v $(pwd)/output:/app/output imagehide /bin/bash -c "./run-gui.sh"
+
+# Revoke X server access after use
+xhost -local:docker
+```
+
+### Using Docker Compose
+
+Create `input/` and `output/` directories in your project root, then:
+
+```bash
+# Build the image
+docker-compose build
+
+# Run CLI commands
+docker-compose run --rm imagehide encode /app/input/sample.png -m "Secret Message" -p password -o /app/output/output.png
+docker-compose run --rm imagehide decode /app/output/output.png -p password
+
+# Run GUI
+docker-compose run --rm imagehide /bin/bash -c "./run-gui.sh"
+```
+
+**Note**: Docker Compose now uses your host user ID to avoid permission issues. If you encounter permission problems, you can set the UID and GID environment variables:
+
+```bash
+export UID=$(id -u)
+export GID=$(id -g)
+docker-compose run --rm imagehide encode /app/input/input.png -m "Secret Message" -p password -o /app/output/output.png
+```
+
+### Notes:
+- Mount your input/output directories as volumes
+- For GUI, ensure X11 forwarding is properly configured
+- The container includes Xvfb for headless GUI operation if DISPLAY is not set

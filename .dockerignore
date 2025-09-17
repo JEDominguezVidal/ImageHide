@@ -68,9 +68,8 @@ Dockerfile
 .dockerignore
 docker-compose.yml
 
-# Input/Output directories (created at runtime)
-input/
-output/
+# Images directory (created at runtime)
+images/
 
 # Other
 *.tmp

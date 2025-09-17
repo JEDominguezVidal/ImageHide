@@ -5,19 +5,11 @@
 
 # Fix permissions for mounted volumes if they exist
 echo "🔧 Fixing permissions for mounted volumes..."
-if [ -d "/app/input" ]; then
-    chmod 755 /app/input 2>/dev/null || echo "⚠️  Could not fix input directory permissions"
+if [ -d "/app/images" ]; then
+    chmod 755 /app/images 2>/dev/null || echo "⚠️  Could not fix images directory permissions"
     # Try to change ownership if running as root
     if [ "$(id -u)" = "0" ]; then
-        chown appuser:appuser /app/input 2>/dev/null || true
-    fi
-fi
-
-if [ -d "/app/output" ]; then
-    chmod 755 /app/output 2>/dev/null || echo "⚠️  Could not fix output directory permissions"
-    # Try to change ownership if running as root
-    if [ "$(id -u)" = "0" ]; then
-        chown appuser:appuser /app/output 2>/dev/null || true
+        chown appuser:appuser /app/images 2>/dev/null || true
     fi
 fi
 

@@ -4,8 +4,7 @@ services:
   imagehide:
     build: .
     volumes:
-      - ./input:/app/input:rw
-      - ./output:/app/output:rw
+      - ./images:/app/images:rw
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
     environment:
       - DISPLAY=${DISPLAY}

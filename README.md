@@ -113,7 +113,7 @@ Before running ImageHide in Docker, run the setup script to prepare your environ
 ```
 
 This will:
-- Create `input/` and `output/` directories
+- Create `images/` directory
 - Fix directory permissions
 - Copy a sample image for testing
 
@@ -126,12 +126,14 @@ docker build -t imagehide .
 
 ### Running CLI Commands
 
+**Unified behavior**: CLI and GUI now work identically - both read from and write to the same directory, using "_steganography" suffix for output files.
+
 ```bash
-# Encode message
-docker run --rm -v $(pwd)/input:/app/input -v $(pwd)/output:/app/output imagehide encode /app/input/sample.png -m "Secret Message" -p password -o /app/output/output.png
+# Encode message (creates sample_steganography.png in images/)
+docker run --rm -v $(pwd)/images:/app/images imagehide encode /app/images/sample.png -m "Secret Message" -p password
 
 # Decode message
-docker run --rm -v $(pwd)/input:/app/input -v $(pwd)/output:/app/output imagehide decode /app/output/output.png -p password
+docker run --rm -v $(pwd)/images:/app/images imagehide decode /app/images/sample_steganography.png -p password
 ```
 
 ### Running GUI
@@ -143,7 +145,7 @@ For GUI usage, you need to allow Docker to access your X server:
 xhost +local:docker
 
 # Run GUI
-docker run --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $(pwd)/input:/app/input -v $(pwd)/output:/app/output imagehide /bin/bash -c "./run-gui.sh"
+docker run --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $(pwd)/images:/app/images imagehide /bin/bash -c "./run-gui.sh"
 
 # Revoke X server access after use
 xhost -local:docker
@@ -151,15 +153,13 @@ xhost -local:docker
 
 ### Using Docker Compose
 
-Create `input/` and `output/` directories in your project root, then:
-
 ```bash
 # Build the image
 docker-compose build
 
-# Run CLI commands
-docker-compose run --rm imagehide encode /app/input/sample.png -m "Secret Message" -p password -o /app/output/output.png
-docker-compose run --rm imagehide decode /app/output/output.png -p password
+# Run CLI commands (unified with GUI behavior)
+docker-compose run --rm imagehide encode /app/images/sample.png -m "Secret Message" -p password
+docker-compose run --rm imagehide decode /app/images/sample_steganography.png -p password
 
 # Run GUI
 docker-compose run --rm imagehide /bin/bash -c "./run-gui.sh"
@@ -170,10 +170,10 @@ docker-compose run --rm imagehide /bin/bash -c "./run-gui.sh"
 ```bash
 export UID=$(id -u)
 export GID=$(id -g)
-docker-compose run --rm imagehide encode /app/input/input.png -m "Secret Message" -p password -o /app/output/output.png
+docker-compose run --rm imagehide encode /app/images/sample.png -m "Secret Message" -p password
 ```
 
 ### Notes:
-- Mount your input/output directories as volumes
+- Mount your "images/" directory as a volume
 - For GUI, ensure X11 forwarding is properly configured
 - The container includes Xvfb for headless GUI operation if DISPLAY is not set

@@ -16,9 +16,9 @@ echo "🔧 Fixing directory permissions..."
 chmod 755 images/
 
 # Check if there's a sample image to copy
-if [ -f "imagehide/assets/test.png" ]; then
+if [ -f "imagehide/assets/sample.png" ]; then
     echo "📋 Copying sample image to images directory..."
-    cp imagehide/assets/test.png images/sample.png
+    cp imagehide/assets/sample.png images/sample.png
     echo "✅ Sample image copied to images/sample.png"
 elif [ -f "imagehide/assets/ImageHide_logo.png" ]; then
     echo "📋 Copying logo image to images directory..."

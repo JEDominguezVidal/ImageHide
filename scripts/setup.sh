@@ -40,4 +40,4 @@ echo "  docker run --rm -v \$(pwd)/images:/app/images imagehide decode /app/imag
 echo ""
 echo "  # GUI (requires X11):"
 echo "  xhost +local:docker"
-echo "  docker run --rm -e DISPLAY=\$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v \$(pwd)/images:/app/images imagehide /bin/bash -c './run-gui.sh'"
+echo "  docker run --rm -e DISPLAY=\$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v \$(pwd)/images:/app/images imagehide /bin/bash -c './scripts/run-gui.sh'"

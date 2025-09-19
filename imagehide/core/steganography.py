@@ -212,23 +212,24 @@ def _channels_to_image(image: Image.Image, modified_channels: Iterable[int], inc
     width, height = image.size
     mode = image.mode
     new_image = Image.new(mode, (width, height))
-    pixels = new_image.load()
-    
+    new_pixels = new_image.load()
+    original_pixels = image.load()
+
     channel_iter = iter(modified_channels)
-    
+
     for y in range(height):
         for x in range(width):
             if mode in ['L', '1']:  # Grayscale
-                pixels[x, y] = next(channel_iter)
+                new_pixels[x, y] = next(channel_iter)
             else:
                 num_channels = 4 if mode == 'RGBA' else 3
                 pixel = []
-                for _ in range(num_channels):
+                for i in range(num_channels):
                     if include_alpha or (len(pixel) < num_channels - 1) or num_channels == 3:
                         pixel.append(next(channel_iter))
                     else:
                         # Keep original alpha channel if not included
-                        pixel.append(original_pixel[3])
-                pixels[x, y] = tuple(pixel)
-    
+                        pixel.append(original_pixels[x, y][3])
+                new_pixels[x, y] = tuple(pixel)
+
     return new_image
